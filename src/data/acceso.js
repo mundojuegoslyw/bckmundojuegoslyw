@@ -1,9 +1,6 @@
 // src/data/acceso.js
 import CryptoJS from 'crypto-js';
 
-// ESTOS SON HASHES, NO LAS CONTRASEÑAS REALES.
-// Ejemplo: El hash de "admin123" es "240be518..."
-// Ejemplo: El hash de "MundoJuegos2026" es "a665a459..."
 
 export const accesoData = {
   // Guardamos los hashes generados previamente

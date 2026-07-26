@@ -7,11 +7,12 @@
 		>
 			<div
 				class="flex items-center gap-3 cursor-pointer"
-				@click="mostrarLogin = true"
+				
 			>
 				<img
 					src="https://lh3.googleusercontent.com/d/1GB2c-ASxENKdjFT-8aelSzZpZjrtciPL"
 					class="w-40 h-25 sm:w-40 sm:h-25 rounded-full object-cover"
+					@click="mostrarLogin = true"
 				/>
 				<h1
 					class="text-4xl sm:text-4xl mb-1 sm:mb-1 font-bold text-cyan-700 tracking-tight animate-bounce"
