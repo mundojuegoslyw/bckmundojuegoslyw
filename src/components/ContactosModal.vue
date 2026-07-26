@@ -4,18 +4,18 @@
     <div 
       v-if="show" 
       class="fixed inset-0 z-[9999] bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4"
-      @click.self="cerrar"
+      @click.self="cerrarModal"
     >
       <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl relative flex flex-col max-h-[85vh] text-slate-800">
         
-        <!-- Encabezado con Botón X -->
+        <!-- Encabezado con Botón X de Cierre -->
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
           <h3 class="text-lg font-black text-rose-700">Notificar Novedades</h3>
           
           <button 
             type="button"
-            @click="cerrar" 
-            class="text-slate-400 hover:text-rose-600 font-bold text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+            @click.stop="cerrarModal" 
+            class="text-slate-400 hover:text-rose-600 font-bold text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors cursor-pointer z-10"
           >
             ✕
           </button>
@@ -27,7 +27,7 @@
           <p class="whitespace-pre-line text-slate-700">{{ mensajeConstruido }}</p>
         </div>
 
-        <!-- MODO ENVÍO PROGRESIVO (Activo cuando hay un proceso en marcha) -->
+        <!-- MODO ENVÍO PROGRESIVO -->
         <div v-if="enProceso" class="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-4 text-center">
           <p class="text-xs font-bold text-amber-800 mb-1">
             Enviando {{ indiceActual + 1 }} de {{ listaParaEnviar.length }}
@@ -104,7 +104,7 @@
         <div class="pt-3 border-t border-slate-100 flex gap-2">
           <button 
             type="button"
-            @click="cerrar"
+            @click.stop="cerrarModal"
             class="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer"
           >
             {{ enProceso ? 'Cancelar' : 'Cerrar' }}
@@ -126,7 +126,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
   show: { type: Boolean, required: true },
@@ -134,7 +134,7 @@ const props = defineProps({
   sitioWebUrl: { type: String, default: 'https://mundojuegoslyw.github.io/mundojuegoslyw' }
 })
 
-const emit = defineEmits(['update:show'])
+const emit = defineEmits(['update:show', 'close'])
 
 const seleccionados = ref([])
 const enProceso = ref(false)
@@ -169,7 +169,6 @@ const generarUrlWhatsApp = (telefono) => {
   return `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensajeConstruido.value)}`
 }
 
-// Inicia el proceso de envío guiado
 const iniciarEnvioMasivo = () => {
   listaParaEnviar.value = props.contactos.filter(c => seleccionados.value.includes(c.id))
   if (listaParaEnviar.value.length === 0) return
@@ -187,16 +186,31 @@ const enviarContactoActual = () => {
 
 const siguienteContacto = () => {
   if (esUltimo.value) {
-    enProceso.value = false
-    seleccionados.value = []
+    resetearEstado()
   } else {
     indiceActual.value++
     enviarContactoActual()
   }
 }
 
-const cerrar = () => {
+const resetearEstado = () => {
   enProceso.value = false
-  emit('update:show', false)
+  listaParaEnviar.value = []
+  indiceActual.value = 0
+  seleccionados.value = []
 }
+
+// Cierre robusto emitiendo tanto 'update:show' como 'close' por compatibilidad
+const cerrarModal = () => {
+  resetearEstado()
+  emit('update:show', false)
+  emit('close')
+}
+
+// Resetea el modal cada vez que cambia su estado de visibilidad desde el padre
+watch(() => props.show, (nuevoVal) => {
+  if (!nuevoVal) {
+    resetearEstado()
+  }
+})
 </script>
