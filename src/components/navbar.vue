@@ -7,7 +7,7 @@
 		>
 			<div
 				class="flex items-center gap-3 cursor-pointer"
-				@click="mostrarModal = true"
+				@click="mostrarLogin = true"
 			>
 				<img
 					src="https://lh3.googleusercontent.com/d/1GB2c-ASxENKdjFT-8aelSzZpZjrtciPL"
@@ -20,22 +20,33 @@
 				</h1>
 			</div>
 		</div>
+		<!-- 1. POPUP DE LOGIN (CON HASING) -->
+		<LoginModal
+			:show="mostrarLogin"
+			@close="mostrarLogin = false"
+			@authenticated="handleAutenticacionExitosa"
+		/>
 		<!-- Componente Modal Importado -->
 		<ContactosModal
-			:show="mostrarModal"
+			:show="mostrarContactos"
 			:contactos="contactosData"
 			sitioWebUrl="https://mundojuegoslyw.github.io/mundojuegoslyw"
-			@close="mostrarModal = false"
+			@close="mostrarContactos = false"
 		/>
 	</header>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { contactosData } from '../data/contactos.js'
-import ContactosModal from './ContactosModal.vue'
-/*defineProps({
-	telefono: { type: String, required: true },
-});*/
-const mostrarModal = ref(false)
+import { ref } from "vue";
+import LoginModal from './LoginModal.vue'
+import { contactosData } from "../data/contactos.js";
+import ContactosModal from "./ContactosModal.vue";
+
+const mostrarLogin = ref(false)
+const mostrarContactos = ref(false)
+
+const handleAutenticacionExitosa = () => {
+  mostrarLogin.value = false;      // Cerrar Login
+  mostrarContactos.value = true;  // Abrir Contactos
+}
 </script>

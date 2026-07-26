@@ -7,7 +7,7 @@ import Navbar from './components/navbar.vue'
 import FilterBar from './components/filterbar.vue'
 import ProductCard from './components/productcard.vue'
 
-const telefonoVentas = '59178150068' // Línea de atención
+const telefonoVentas = '59172615604' // Línea de atención
 const productos = ref(productosData)
 
 
