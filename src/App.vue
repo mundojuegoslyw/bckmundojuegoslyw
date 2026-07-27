@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { productosData } from './data/productos.js'
+import { productosData, lote_actual } from './data/productos.js'
 
 // Importación de componentes hijos
 import Navbar from './components/navbar.vue'
@@ -13,11 +13,17 @@ const productos = ref(productosData)
 
 // Cálculo de categorías únicas
 const categorias = computed(() => {
-  return [ ...new Set(productos.value.map(p => p.category))]
+  return [ ...new Set(productos.value.map(p => p.category)),'nuevos']
 })
 const categoriaSeleccionada = ref(categorias.value[0]) // Inicialmente selecciona la primera categoría
+
 // Datos filtrados reactivos
 const productosFiltrados = computed(() => {  
+  // CASO : Si selecciona el botón "NUEVOS"
+  if (categoriaSeleccionada.value === 'nuevos') {
+    return productos.value.filter(p => p.lote === lote_actual)
+  }
+  //para el resto de categorias
   return productos.value.filter(p => p.category === categoriaSeleccionada.value)
 })
 </script>

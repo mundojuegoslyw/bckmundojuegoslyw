@@ -9,6 +9,8 @@
         seleccionada === cat ? 'bg-rose-800 text-white' : 'bg-slate-100 text-cyan-500 border border-slate-200 hover:bg-slate-300'
       ]"
     >
+    <!-- Agrega un emoji si el botón corresponde a "Nuevos" -->
+    <span v-if="cat.toLowerCase() === 'nuevos'">🔥</span>
       {{ cat }}
     </button>
   </div>

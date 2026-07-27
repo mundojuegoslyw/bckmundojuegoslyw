@@ -10,13 +10,14 @@
 				<img
 					:src="item.image"
 					:alt="item.name"
+          loading="lazy"
 					class="w-full h-full object-contain"
 				/>
 				<span
-					v-if="item.tipo?.toLowerCase() === 'nuevo'"
+					v-if="item.lote === lote_actual"
 					class="absolute top-1 left-1 bg-white text-rose-800 text-sm font-bold px-1 py-1 rounded-md tracking-wider border border-slate-100"
 				>
-					{{ item.tipo }}
+					nuevo
 				</span>
 			</div>
 			<!-- MODAL / PANTALLA COMPLETA AL HACER CLICK (Funciona en PC y Celular) -->
@@ -75,8 +76,10 @@
 </template>
 
 <script setup>
+
 import { computed } from "vue";
 import { ref } from 'vue';
+import { lote_actual } from "../data/productos.js";
 
 const props = defineProps({
 	item: { type: Object, required: true },
